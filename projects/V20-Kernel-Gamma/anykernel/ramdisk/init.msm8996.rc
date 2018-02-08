@@ -1,0 +1,131 @@
+on enable-gpu-tweaks
+    write /dev/kmsg "GammaKernel: GPU Overclock and GFx Tweaks"
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+
+
+on enable-display-tweaks
+    write /dev/kmsg "GammaKernel: LCD Panel Optimizations"
+    write /sys/class/leds/lcd-backlight/max_brightness 255
+
+    # Gamma settings for better LG V20 contrast and colors
+    write /sys/devices/platform/kcal_ctrl.0/kcal_enable 1
+    write /sys/devices/platform/kcal_ctrl.0/kcal "256 256 223"
+    write /sys/devices/platform/kcal_ctrl.0/kcal_min 40
+    write /sys/devices/platform/kcal_ctrl.0/kcal_sat 260
+    write /sys/devices/platform/kcal_ctrl.0/kcal_val 255
+    write /sys/devices/platform/kcal_ctrl.0/kcal_cont 256
+
+on enable-mem-tweaks
+    write /dev/kmsg "GammaKernel: Bandwidth & Memory Subsystem Enhancements"
+    write /sys/class/devfreq/soc:qcom,mincpubw/governor cpufreq
+
+    write /sys/class/devfreq/soc:qcom,cpubw/governor bw_hwmon
+    write /sys/class/devfreq/soc:qcom,cpubw/polling_interval 40
+    write /sys/class/devfreq/soc:qcom,cpubw/min_freq 762
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/mbps_zones "1525 5195 11863 13763"
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/bw_step 400
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/decay_rate 80
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/guard_band_mbps 0
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/io_percent 20
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_io_percent 30
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_delay 10
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_ceil_mbps 0
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/up_scale 250
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/up_thres 10
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/hist_memory 20
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/hyst_length 10
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/idle_mbps 1600
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/sample_ms 4
+
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/governor mem_latency
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/polling_interval 1
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/freq_thresh_mhz 800
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/mult_factor 8
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/ratio_ceil 20
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/governor mem_latency
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/polling_interval 1
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/freq_thresh_mhz 800
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/mult_factor 8
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/ratio_ceil 20
+
+    # write /sys/class/devfreq/soc:qcom,m4m/governor cpufreq
+
+
+on enable-cpu-tweaks
+    # Disable thermal hotplug to switch governor
+    write /sys/module/msm_thermal/core_control/enabled 0
+
+    # Little cluster
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 1000
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 4000
+
+    # Big cluster
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us 2000
+    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us 4000
+
+    # Re-enable thermal hotplug
+    write /sys/module/msm_thermal/core_control/enabled 1
+
+    # Use WALT and optimize parameters
+    write /proc/sys/kernel/sched_use_walt_cpu_util 1
+    write /proc/sys/kernel/sched_use_walt_task_util 1
+    write /proc/sys/kernel/sched_walt_init_task_load_pct 10
+    write /proc/sys/kernel/sched_walt_cpu_high_irqload 10000000
+
+    # Now that boot is complete we want better load balancing
+    write /dev/cpuset/top-app/cpus 0-3
+    write /dev/cpuset/foreground/cpus 0-2
+    write /dev/cpuset/foreground/boost/cpus 0-2
+    write /dev/cpuset/background/cpus 0
+    write /dev/cpuset/system-background/cpus 0-2
+
+    # Set default schedTune value for foreground/top-app (only affects EAS)
+    write /dev/stune/schedtune.prefer_idle 0
+    write /dev/stune/top-app/schedtune.prefer_idle 1
+    write /dev/stune/foreground/schedtune.prefer_idle 1
+    write /dev/stune/background/schedtune.prefer_idle 0
+
+
+on enable-lmk-tweaks
+    # Memory management
+    write /proc/sys/vm/overcommit_memory 1
+    write /proc/sys/vm/overcommit_ratio 100
+    write /proc/sys/vm/min_free_kbytes 8192
+    # Enable adaptive LMK and set vmpressure_file_min
+    write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
+    write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 81250
+
+
+on enable-misc-tweaks
+    write /sys/class/mmc_host/mmc0/clk_scaling/down_threshold 5
+    write /sys/class/mmc_host/mmc0/clk_scaling/up_threshold 20
+    write /sys/class/mmc_host/mmc0/clk_scaling/polling_interval 160
+    write /sys/class/mmc_host/mmc0/clk_scaling/enable 1
+
+
+on disable-extra-logging
+    write /sys/module/glink/parameters/debug_mask 0
+    write /sys/module/smp2p/parameters/debug_mask 0
+    write /sys/module/msm_bt_sleep/parameters/debug_mask 0
+    write /sys/module/touch_core/parameters/debug_mask 0
+    write /sys/module/mpm_of/parameters/debug_mask 0
+    write /sys/module/msm_pm/parameters/debug_mask 0
+    write /sys/module/qpnp_smbcharger/parameters/debug_mask 0
+    write /sys/module/pci_msm/parameters/debug_mask 0
+    write /sys/module/msm_smd_pkt/parameters/debug_mask 0
+
+
+on property:sys.boot_completed=1
+    trigger enable-gpu-tweaks
+    trigger enable-mem-tweaks
+    trigger enable-cpu-tweaks
+    trigger enable-lmk-tweaks
+    trigger enable-misc-tweaks
+
+
+on boot
+    trigger disable-extra-logging
+    trigger enable-display-tweaks
+

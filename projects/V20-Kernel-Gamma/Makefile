@@ -123,6 +123,7 @@ kernel:
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" "$(KDEFCONFIG)"
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y Image.gz-dtb
 	cp -f "$(KBUILD_OUT_PATH)/arch/$(ARCH)/boot/Image.gz-dtb" "$(OUT_PATH)/Image.gz-dtb"
+	$(MAKE) -C anykernel 
 
 .PHONY: modules
 modules:

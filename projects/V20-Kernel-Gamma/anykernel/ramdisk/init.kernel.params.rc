@@ -1,0 +1,83 @@
+on late-fs
+    write /sys/block/sda/queue/scheduler noop
+    write /sys/block/mmcblk0/queue/scheduler noop
+    write /sys/block/sda/queue/nr_requests 256
+    write /sys/block/sda/queue/read_ahead_kb 2048
+    write /sys/block/mmcblk0/queue/nr_requests 256
+    write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+
+
+on enable-storage-tweaks
+    # Balancing the write queueing for less latency
+    write /sys/block/sda/queue/nr_requests 128
+    write /sys/block/mmcblk0/queue/nr_requests 128
+    # Optimal read ahead value
+    write /sys/block/sda/queue/read_ahead_kb 128
+    write /sys/block/mmcblk0/queue/read_ahead_kb 128
+    # Tag as non rotational devices
+    write /sys/block/sda/queue/rotational 0
+    write /sys/block/mmcblk0/queue/rotational 0
+    # Disable iostats to reduce overhead
+    write /sys/block/sda/queue/iostats 0
+    write /sys/block/mmcblk0/queue/iostats 0
+    # Disable random, this is important for eMMC
+    write /sys/block/sda/queue/add_random 0
+    write /sys/block/mmcblk0/queue/add_random 0
+    # Merge affinity to let it freely finish on any thread
+    write /sys/block/sda/queue/rq_affinity 0
+    write /sys/block/mmcblk0/queue/rq_affinity 0
+    # Setting minimum ratio of caching for QoS
+    write /sys/block/sda/bdi/min_ratio 5
+    write /sys/block/mmcblk0/bdi/min_ratio 5
+
+
+on property:sys.io.scheduler=bfq
+    write /sys/block/sda/queue/scheduler bfq
+    write /sys/block/sda/queue/iosched/back_seek_penalty 1
+    write /sys/block/sda/queue/iosched/slice_idle 0
+    write /sys/block/mmcblk0/queue/scheduler bfq
+    write /sys/block/mmcblk0/queue/iosched/back_seek_penalty 1
+    write /sys/block/mmcblk0/queue/iosched/slice_idle 0
+
+
+on boot
+    # Enabling kernel same-page merging (KSM)
+    chown root system /sys/kernel/mm/ksm/pages_to_scan
+    chmod 0664 /sys/kernel/mm/ksm/pages_to_scan
+    chown root system /sys/kernel/mm/ksm/sleep_millisecs
+    chmod 0664 /sys/kernel/mm/ksm/sleep_millisecs
+    chown root system /sys/kernel/mm/ksm/deferred_timer
+    chmod 0664 /sys/kernel/mm/ksm/deferred_timer
+    chown root system /sys/kernel/mm/ksm/run
+    chmod 0664 /sys/kernel/mm/ksm/run
+    write /sys/kernel/mm/ksm/pages_to_scan 128
+    write /sys/kernel/mm/ksm/sleep_millisecs 4000
+    write /sys/kernel/mm/ksm/deferred_timer 1
+    write /sys/kernel/mm/ksm/run 1
+
+
+
+on property:sys.boot_completed=1
+    # Scheduler time slice optimizations
+    write /proc/sys/kernel/sched_tunable_scaling 0
+    write /proc/sys/kernel/sched_latency_ns 8000000
+    write /proc/sys/kernel/sched_min_granularity_ns 900000
+    write /proc/sys/kernel/sched_wakeup_granularity_ns 400000
+
+    # Caching subsystem optimizations
+    write /proc/sys/vm/swappiness 10
+
+    # IO Scheduler is being set
+    setprop sys.io.scheduler bfq
+    trigger enable-storage-tweaks
+
+    # Entropy generation thresholds
+    write /proc/sys/kernel/random/read_wakeup_threshold 128
+    write /proc/sys/kernel/random/write_wakeup_threshold 256
+
+    # Android memory management tweaks
+    write /sys/module/lowmemorykiller/parameters/debug_level 0
+    write /sys/module/lowmemorykiller/parameters/lmk_fast_run 0
+    write /proc/sys/vm/oom_dump_tasks 0
+    write /proc/sys/vm/page-cluster 0
+
