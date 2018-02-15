@@ -41,6 +41,7 @@
 export ARCH := arm64
 export ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 export CROSS_COMPILE := $(ROOT_DIR)/gcc/linaro-6.4/bin/aarch64-linux-gnu-
+#export CROSS_COMPILE := /home/kyle/cross/bin/aarch64-linux-gnu-
 export KBUILD_VERBOSE := 0
 
 ############################################################################
@@ -66,7 +67,7 @@ export QCOM_S820 := \
         --param l1-cache-size=32 \
         --param l2-cache-size=512 \
 
-export GRAPHTIE_FLAGS := \
+export 1GRAPHITE_FLAGS := \
         -fgraphite-identity \
         -ftree-loop-linear \
         -floop-interchange \
@@ -75,9 +76,9 @@ export GRAPHTIE_FLAGS := \
 
 export KCFLAGS := \
         -pipe \
-        -O2 \
-        -flto \
         -finline-functions \
+        -O3 \
+#	-fuse-ld=bfd \
         -fomit-frame-pointer \
         -ftree-vectorize \
         -ftree-slp-vectorize \
@@ -106,7 +107,11 @@ export KCFLAGS := \
         $(GRAPHITE_FLAGS) \
 
 export KCFLAGS += -Wno-maybe-uninitialized
+<<<<<<< HEAD
 export LDFLAGS += -O2 --hash-style=gnu --as-needed -flto
+=======
+export LDFLAGS += -O3 --hash-style=gnu --as-needed
+>>>>>>> 80b2c86d... Keep lto disabled thats a can of worms that isnt happening
 
 export KCFLAGS += -Wno-misleading-indentation
 export KCFLAGS += -Wno-tautological-compare
@@ -121,7 +126,12 @@ export KCFLAGS += -fno-use-linker-plugin
 kernel:
 	mkdir -p "$(KBUILD_OUT_PATH)"
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" "$(KDEFCONFIG)"
+<<<<<<< HEAD
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y Image.gz-dtb
+=======
+#	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" menuconfig
+	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y CONFIG_DEBUG_SECTION_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
+>>>>>>> 80b2c86d... Keep lto disabled thats a can of worms that isnt happening
 	cp -f "$(KBUILD_OUT_PATH)/arch/$(ARCH)/boot/Image.gz-dtb" "$(OUT_PATH)/Image.gz-dtb"
 	$(MAKE) -C anykernel 
 
