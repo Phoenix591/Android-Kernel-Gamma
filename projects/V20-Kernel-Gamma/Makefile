@@ -48,7 +48,7 @@ export KBUILD_VERBOSE := 0
 ##################### LOCAL SETUP AND FILE STRUCTURES ######################
 ############################################################################
 
-KDEFCONFIG := lineageos_us996_oxavelar_defconfig
+KDEFCONFIG := lineageos_h918_oxavelar_defconfig
 KSRC_PATH = $(ROOT_DIR)/kernel/
 OUT_PATH := $(ROOT_DIR)/out
 KBUILD_OUT_PATH = $(OUT_PATH)/kbuild
