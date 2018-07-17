@@ -1,34 +1,41 @@
 on enable-gpu-tweaks
     write /dev/kmsg "GammaKernel: GPU Overclock and GFx Tweaks"
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+    write /sys/class/kgsl/kgsl-3d0/min_pwrlevel 6
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 624000000
 
 
 on enable-display-tweaks
     write /dev/kmsg "GammaKernel: LCD Panel Optimizations"
     write /sys/class/leds/lcd-backlight/max_brightness 255
 
+    # Change brightness level to reduce heat during boot
+    write /sys/class/leds/lcd-backlight/brightness 127
+    write /sys/class/leds/lcd-backlight-ex/brightness 127
+
     # Gamma settings for better LG V20 contrast and colors
     write /sys/devices/platform/kcal_ctrl.0/kcal_enable 1
     write /sys/devices/platform/kcal_ctrl.0/kcal "256 256 223"
-    write /sys/devices/platform/kcal_ctrl.0/kcal_min 40
+    write /sys/devices/platform/kcal_ctrl.0/kcal_min 20
     write /sys/devices/platform/kcal_ctrl.0/kcal_sat 260
     write /sys/devices/platform/kcal_ctrl.0/kcal_val 255
     write /sys/devices/platform/kcal_ctrl.0/kcal_cont 256
 
+
 on enable-mem-tweaks
     write /dev/kmsg "GammaKernel: Bandwidth & Memory Subsystem Enhancements"
-    write /sys/class/devfreq/soc:qcom,mincpubw/governor cpufreq
+    write /sys/class/devfreq/soc:qcom,mincpubw/governor powersave
 
     write /sys/class/devfreq/soc:qcom,cpubw/governor bw_hwmon
     write /sys/class/devfreq/soc:qcom,cpubw/polling_interval 40
     write /sys/class/devfreq/soc:qcom,cpubw/min_freq 762
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/mbps_zones "1525 5195 11863 13763"
-    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/bw_step 400
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/bw_step 280
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/decay_rate 80
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/guard_band_mbps 0
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/io_percent 20
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_io_percent 30
-    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_delay 10
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_delay 40
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_ceil_mbps 0
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/up_scale 250
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/up_thres 10
@@ -38,35 +45,34 @@ on enable-mem-tweaks
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/sample_ms 4
 
     write /sys/class/devfreq/soc:qcom,memlat-cpu0/governor mem_latency
-    write /sys/class/devfreq/soc:qcom,memlat-cpu0/polling_interval 1
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/polling_interval 2
     write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/freq_thresh_mhz 800
-    write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/mult_factor 8
-    write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/ratio_ceil 20
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/mult_factor 2
+    write /sys/class/devfreq/soc:qcom,memlat-cpu0/mem_latency/ratio_ceil 400
     write /sys/class/devfreq/soc:qcom,memlat-cpu2/governor mem_latency
-    write /sys/class/devfreq/soc:qcom,memlat-cpu2/polling_interval 1
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/polling_interval 2
     write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/freq_thresh_mhz 800
-    write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/mult_factor 8
-    write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/ratio_ceil 20
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/mult_factor 4
+    write /sys/class/devfreq/soc:qcom,memlat-cpu2/mem_latency/ratio_ceil 400
 
-    # write /sys/class/devfreq/soc:qcom,m4m/governor cpufreq
+    write /sys/class/devfreq/soc:qcom,m4m/governor cpufreq
 
 
 on enable-cpu-tweaks
-    # Disable thermal hotplug to switch governor
+    # Disable thermals
     write /sys/module/msm_thermal/core_control/enabled 0
 
     # Little cluster
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
-    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 1000
-    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 4000
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 500
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 8000
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 0
 
     # Big cluster
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor schedutil
-    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us 2000
-    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us 4000
-
-    # Re-enable thermal hotplug
-    write /sys/module/msm_thermal/core_control/enabled 1
+    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us 1000
+    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us 8000
+    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/iowait_boost_enable 0
 
     # Use WALT and optimize parameters
     write /proc/sys/kernel/sched_use_walt_cpu_util 1
@@ -77,19 +83,35 @@ on enable-cpu-tweaks
     # Now that boot is complete we want better load balancing
     write /dev/cpuset/top-app/cpus 0-3
     write /dev/cpuset/foreground/cpus 0-2
-    write /dev/cpuset/foreground/boost/cpus 0-2
     write /dev/cpuset/background/cpus 0
     write /dev/cpuset/system-background/cpus 0-2
 
+    # Update DVR cpusets to runtime values
+    write /dev/cpuset/kernel/cpus 0,1
+    write /dev/cpuset/system/performance/cpus 2
+    write /dev/cpuset/system/background/cpus 0
+    write /dev/cpuset/system/cpus 0,2
+    write /dev/cpuset/application/performance/cpus 3
+    write /dev/cpuset/application/background/cpus 1
+    write /dev/cpuset/application/cpus 1,3
+
     # Set default schedTune value for foreground/top-app (only affects EAS)
     write /dev/stune/schedtune.prefer_idle 0
+    write /dev/stune/top-app/schedtune.boost 10
     write /dev/stune/top-app/schedtune.prefer_idle 1
-    write /dev/stune/foreground/schedtune.prefer_idle 1
+    write /dev/stune/rt/schedtune.boost 30
+    write /dev/stune/rt/schedtune.prefer_idle 1
+    write /dev/stune/foreground/schedtune.prefer_idle 0
     write /dev/stune/background/schedtune.prefer_idle 0
+
+    # Re-enable thermals
+    write /sys/module/msm_thermal/core_control/enabled 1
 
 
 on enable-lmk-tweaks
     # Memory management
+    write /proc/sys/vm/dirty_background_ratio 20
+    write /proc/sys/vm/dirty_ratio 40
     write /proc/sys/vm/overcommit_memory 1
     write /proc/sys/vm/overcommit_ratio 100
     write /proc/sys/vm/min_free_kbytes 8192
@@ -99,22 +121,49 @@ on enable-lmk-tweaks
 
 
 on enable-misc-tweaks
+    # Storage
+    write /sys/devices/soc/624000.ufshc/clkscale_enable 1
+    write /sys/devices/soc/624000.ufshc/clkgate_enable 1
+    write /sys/devices/soc/624000.ufshc/clkgate_delay_ms_perf 50
+    write /sys/devices/soc/624000.ufshc/clkgate_delay_ms_pwr_save 10
+    write /sys/class/devfreq/624000.ufshc/polling_interval 60
+
+    write /sys/class/mmc_host/mmc0/clk_scaling/enable 1
     write /sys/class/mmc_host/mmc0/clk_scaling/down_threshold 5
     write /sys/class/mmc_host/mmc0/clk_scaling/up_threshold 20
-    write /sys/class/mmc_host/mmc0/clk_scaling/polling_interval 160
-    write /sys/class/mmc_host/mmc0/clk_scaling/enable 1
+    write /sys/class/mmc_host/mmc0/clk_scaling/polling_interval 120
+
+    # Extras
+    write /proc/sys/kernel/modules_disabled 1
 
 
 on disable-extra-logging
-    write /sys/module/glink/parameters/debug_mask 0
-    write /sys/module/smp2p/parameters/debug_mask 0
-    write /sys/module/msm_bt_sleep/parameters/debug_mask 0
-    write /sys/module/touch_core/parameters/debug_mask 0
-    write /sys/module/mpm_of/parameters/debug_mask 0
-    write /sys/module/msm_pm/parameters/debug_mask 0
-    write /sys/module/qpnp_smbcharger/parameters/debug_mask 0
-    write /sys/module/pci_msm/parameters/debug_mask 0
-    write /sys/module/msm_smd_pkt/parameters/debug_mask 0
+    write /devices/soc/91c0000.slim/debug_mask
+    write /module/smd/parameters/debug_mask
+    write /module/spm/parameters/debug_mask
+    write /module/smem/parameters/debug_mask
+    write /module/qpnp_fg/parameters/debug_mask
+    write /module/event_timer/parameters/debug_mask
+    write /module/glink/parameters/debug_mask
+    write /module/smp2p/parameters/debug_mask
+    write /module/virtual_temp_sensor/parameters/debug_mask
+    write /module/rpm_smd/parameters/debug_mask
+    write /module/msm_glink_pkt/parameters/debug_mask
+    write /module/xt_qtaguid/parameters/debug_mask
+    write /module/msm_bt_sleep/parameters/debug_mask
+    write /module/qpnp_regulator/parameters/debug_mask
+    write /module/binder/parameters/debug_mask
+    write /module/msm_show_resume_irq/parameters/debug_mask
+    write /module/rpm_smd_regulator/parameters/debug_mask
+    write /module/binder_alloc/parameters/debug_mask
+    write /module/touch_core/parameters/debug_mask
+    write /module/mpm_of/parameters/debug_mask
+    write /module/msm_pm/parameters/debug_mask
+    write /module/ipc_router_core/parameters/debug_mask
+    write /module/ipc_router_glink_xprt/parameters/debug_mask
+    write /module/qpnp_smbcharger/parameters/debug_mask
+    write /module/pci_msm/parameters/debug_mask
+    write /module/msm_smd_pkt/parameters/debug_mask
 
 
 on property:sys.boot_completed=1

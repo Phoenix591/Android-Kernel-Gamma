@@ -9,11 +9,11 @@ on late-fs
 
 on enable-storage-tweaks
     # Balancing the write queueing for less latency
-    write /sys/block/sda/queue/nr_requests 128
+    write /sys/block/sda/queue/nr_requests 8
     write /sys/block/mmcblk0/queue/nr_requests 128
     # Optimal read ahead value
     write /sys/block/sda/queue/read_ahead_kb 128
-    write /sys/block/mmcblk0/queue/read_ahead_kb 128
+    write /sys/block/mmcblk0/queue/read_ahead_kb 1024
     # Tag as non rotational devices
     write /sys/block/sda/queue/rotational 0
     write /sys/block/mmcblk0/queue/rotational 0
@@ -23,7 +23,7 @@ on enable-storage-tweaks
     # Disable random, this is important for eMMC
     write /sys/block/sda/queue/add_random 0
     write /sys/block/mmcblk0/queue/add_random 0
-    # Merge affinity to let it freely finish on any thread
+    # Merge affinity tuning
     write /sys/block/sda/queue/rq_affinity 0
     write /sys/block/mmcblk0/queue/rq_affinity 0
     # Setting minimum ratio of caching for QoS
@@ -56,7 +56,6 @@ on boot
     write /sys/kernel/mm/ksm/run 1
 
 
-
 on property:sys.boot_completed=1
     # Scheduler time slice optimizations
     write /proc/sys/kernel/sched_tunable_scaling 0
@@ -72,8 +71,8 @@ on property:sys.boot_completed=1
     trigger enable-storage-tweaks
 
     # Entropy generation thresholds
-    write /proc/sys/kernel/random/read_wakeup_threshold 128
-    write /proc/sys/kernel/random/write_wakeup_threshold 256
+    write /proc/sys/kernel/random/read_wakeup_threshold 64
+    write /proc/sys/kernel/random/write_wakeup_threshold 1024
 
     # Android memory management tweaks
     write /sys/module/lowmemorykiller/parameters/debug_level 0
