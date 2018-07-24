@@ -47,8 +47,8 @@ export KBUILD_VERBOSE := 0
 ############################################################################
 ##################### LOCAL SETUP AND FILE STRUCTURES ######################
 ############################################################################
-
-KDEFCONFIG := lineageos_h918_oxavelar_defconfig
+export DEVICE = h918
+KDEFCONFIG := lineageos_$(DEVICE)_oxavelar_defconfig
 KSRC_PATH = $(ROOT_DIR)/kernel/
 OUT_PATH := $(ROOT_DIR)/out
 KBUILD_OUT_PATH = $(OUT_PATH)/kbuild
@@ -133,7 +133,7 @@ kernel:
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y CONFIG_DEBUG_SECTION_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
 >>>>>>> 80b2c86d... Keep lto disabled thats a can of worms that isnt happening
 	cp -f "$(KBUILD_OUT_PATH)/arch/$(ARCH)/boot/Image.gz-dtb" "$(OUT_PATH)/Image.gz-dtb"
-	$(MAKE) -C anykernel 
+	$(MAKE) -C anykernel DEVICE=$(DEVICE)
 
 .PHONY: modules
 modules:
