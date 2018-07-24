@@ -40,7 +40,7 @@
 
 export ARCH := arm64
 export ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-export CROSS_COMPILE := $(ROOT_DIR)/gcc/linaro-6.4/bin/aarch64-linux-gnu-
+export CROSS_COMPILE := ccache $(ROOT_DIR)/gcc/linaro-6.4/bin/aarch64-linux-gnu-
 #export CROSS_COMPILE := /home/kyle/cross/bin/aarch64-linux-gnu-
 export KBUILD_VERBOSE := 0
 
