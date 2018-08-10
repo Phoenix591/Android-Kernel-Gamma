@@ -1,3 +1,4 @@
+
 on late-fs
     write /sys/block/sda/queue/scheduler noop
     write /sys/block/mmcblk0/queue/scheduler noop
@@ -59,9 +60,9 @@ on boot
 on property:sys.boot_completed=1
     # Scheduler time slice optimizations
     write /proc/sys/kernel/sched_tunable_scaling 0
-    write /proc/sys/kernel/sched_latency_ns 8000000
-    write /proc/sys/kernel/sched_min_granularity_ns 900000
-    write /proc/sys/kernel/sched_wakeup_granularity_ns 400000
+    write /proc/sys/kernel/sched_latency_ns 10000000
+    write /proc/sys/kernel/sched_min_granularity_ns 400000
+    write /proc/sys/kernel/sched_wakeup_granularity_ns 2000000
 
     # Caching subsystem optimizations
     write /proc/sys/vm/swappiness 10
@@ -71,8 +72,8 @@ on property:sys.boot_completed=1
     trigger enable-storage-tweaks
 
     # Entropy generation thresholds
-    write /proc/sys/kernel/random/read_wakeup_threshold 64
-    write /proc/sys/kernel/random/write_wakeup_threshold 1024
+    write /proc/sys/kernel/random/read_wakeup_threshold 128
+    write /proc/sys/kernel/random/write_wakeup_threshold 512
 
     # Android memory management tweaks
     write /sys/module/lowmemorykiller/parameters/debug_level 0

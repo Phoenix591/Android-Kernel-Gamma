@@ -40,8 +40,8 @@
 
 export ARCH := arm64
 export ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-export CROSS_COMPILE := ccache $(ROOT_DIR)/gcc/linaro-6.4/bin/aarch64-linux-gnu-
-#export CROSS_COMPILE := /home/kyle/cross/bin/aarch64-linux-gnu-
+#export CROSS_COMPILE := $(ROOT_DIR)/gcc/linaro-6.4/bin/aarch64-linux-gnu-
+export CROSS_COMPILE := /home/phoenix/linaro-6.4.1-05-2018/bin/aarch64-linux-gnu-
 export KBUILD_VERBOSE := 0
 
 ############################################################################
@@ -76,6 +76,7 @@ export 1GRAPHITE_FLAGS := \
 
 export KCFLAGS := \
         -pipe \
+<<<<<<< HEAD
         -finline-functions \
         -O3 \
 #	-fuse-ld=bfd \
@@ -108,10 +109,14 @@ export KCFLAGS := \
 
 export KCFLAGS += -Wno-maybe-uninitialized
 <<<<<<< HEAD
+<<<<<<< HEAD
 export LDFLAGS += -O2 --hash-style=gnu --as-needed -flto
 =======
 export LDFLAGS += -O3 --hash-style=gnu --as-needed
 >>>>>>> 80b2c86d... Keep lto disabled thats a can of worms that isnt happening
+=======
+export LDFLAGS += -Os --hash-style=gnu --as-needed
+>>>>>>> 318d09fe... Update parameters etc in ramdisk to gamma v23
 
 export KCFLAGS += -Wno-misleading-indentation
 export KCFLAGS += -Wno-tautological-compare
@@ -130,8 +135,12 @@ kernel:
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y Image.gz-dtb
 =======
 #	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" menuconfig
+<<<<<<< HEAD
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y CONFIG_DEBUG_SECTION_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
 >>>>>>> 80b2c86d... Keep lto disabled thats a can of worms that isnt happening
+=======
+	$(MAKE) -j9 -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
+>>>>>>> 318d09fe... Update parameters etc in ramdisk to gamma v23
 	cp -f "$(KBUILD_OUT_PATH)/arch/$(ARCH)/boot/Image.gz-dtb" "$(OUT_PATH)/Image.gz-dtb"
 	$(MAKE) -C anykernel DEVICE=$(DEVICE)
 
