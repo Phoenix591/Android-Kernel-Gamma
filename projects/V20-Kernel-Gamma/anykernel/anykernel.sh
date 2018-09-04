@@ -10,9 +10,9 @@ do.modules=0
 do.cleanup=1
 do.cleanuponabort=0
 device.name1=elsa
-device.name2=omni_vs995
-device.name3=vs995
-device.name4=LG-VS995
+device.name2=omni_h918
+device.name3=h918
+device.name4=LG-H918
 '; } # end properties
 
 # shell variables

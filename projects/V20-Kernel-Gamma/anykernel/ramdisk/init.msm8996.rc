@@ -37,13 +37,13 @@ on enable-mem-tweaks
     write /sys/class/devfreq/soc:qcom,cpubw/polling_interval 40
     write /sys/class/devfreq/soc:qcom,cpubw/min_freq 762
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/mbps_zones "1525 5195 11863 13763"
-    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/bw_step 220
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/bw_step 280
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/decay_rate 80
-    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/down_thres 50
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/down_thres 60
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/guard_band_mbps 0
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/io_percent 20
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_io_percent 30
-    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_delay 60
+    write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_delay 50
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_ceil_mbps 0
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/up_scale 250
     write /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/up_thres 10
@@ -74,16 +74,31 @@ on enable-cpu-tweaks
     write /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask 0
     write /sys/devices/soc/soc:qcom,bcl/mode enabled
 
+    # Online all the CPU's
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu3/online 1
+
+    # Reset min and max freqs
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 307200
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 307200
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 307200
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 307200
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1593600
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1593600
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 2150400
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 2150400
+
     # Little cluster
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 1000
-    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 8000
+    write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 16000
     write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 0
 
     # Big cluster
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor schedutil
     write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/up_rate_limit_us 2000
-    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us 8000
+    write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/down_rate_limit_us 16000
     write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/iowait_boost_enable 0
 
     # Use WALT and optimize parameters
@@ -100,8 +115,8 @@ on enable-cpu-tweaks
 
     # Re-enable thermals
     write /sys/devices/soc/soc:qcom,bcl/mode disabled
-    write /sys/devices/soc/soc:qcom,bcl/hotplug_mask 12
-    write /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask 0
+    write /sys/devices/soc/soc:qcom,bcl/hotplug_mask 8
+    write /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask 8
     write /sys/devices/soc/soc:qcom,bcl/mode enabled
     write /sys/module/msm_thermal/core_control/enabled 1
 
@@ -162,6 +177,20 @@ on disable-extra-logging
     write /module/qpnp_smbcharger/parameters/debug_mask
     write /module/pci_msm/parameters/debug_mask
     write /module/msm_smd_pkt/parameters/debug_mask
+
+
+on enable-low-power
+    trigger enable-gpu-tweaks
+    trigger enable-mem-tweaks
+    trigger enable-cpu-tweaks
+    trigger enable-lmk-tweaks
+
+
+on property:sys.perf.profile=1
+    trigger enable-gpu-tweaks
+    trigger enable-mem-tweaks
+    trigger enable-cpu-tweaks
+    trigger enable-lmk-tweaks
 
 
 on property:sys.boot_completed=1
