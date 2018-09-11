@@ -13,7 +13,7 @@ https://github.com/franciscofranco/marlin/commit/d1b6fd4bf263c8ec26a26638d4802f8
 https://github.com/RenderBroken/OP3-LOS-kernel/commit/f890ba6875a3afb8cdf0ee145fcf0040c14e0660
 
 # Security
-https://github.com/LineageOS/android_kernel_lge_msm8996/commit/83bb3cfab044718ac2f3179c1720fdd617fd25e3
-https://github.com/LineageOS/android_kernel_lge_msm8996/commit/37c8e7f60ed6eedac156d427e785dbfc37fb7937
+https://github.com/LineageOS/android_kernel_lge_msm8996/commit/69338c3255a1cbdf66e8cd482d1b66ec5b3eed2c
+https://github.com/LineageOS/android_kernel_lge_msm8996/commit/a967cea993a66c1435b36aa64c4302f338b3b17b
 
 https://github.com/tabp0le/htc10.pme.msm8996.kernel/commit/4235016daca92e2e54f855efe16583c433bf1d1d
