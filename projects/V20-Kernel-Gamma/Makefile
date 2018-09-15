@@ -41,7 +41,9 @@
 export ARCH := arm64
 export ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 #export CROSS_COMPILE := $(ROOT_DIR)/gcc/linaro-6.4/bin/aarch64-linux-gnu-
-export CROSS_COMPILE := /home/phoenix/linaro-6.4.1-05-2018/bin/aarch64-linux-gnu-
+#export CROSS_COMPILE := 'ccache /home/phoenix/linaro-6.4.1-05-2018/bin/aarch64-linux-gnu-'
+export CROSS_COMPILE := aarch64-linux-gnu-
+export PATH := $(ROOT_DIR)/ccache:/home/phoenix/linaro-6.4.1-05-2018/bin:$(PATH)
 export KBUILD_VERBOSE := 0
 
 ############################################################################
