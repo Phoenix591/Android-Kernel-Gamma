@@ -1,0 +1,143 @@
+From 03901b8dbdc2ce42f16a6c411635ca2bb19b7234 Mon Sep 17 00:00:00 2001
+From: Phoenix591 <11486+Phoenix591@users.noreply.github.com>
+Date: Fri, 17 Aug 2018 15:31:15 -0500
+Subject: [PATCH] enable second screen
+
+---
+ arch/arm64/configs/lineageos_h910_oxavelar_defconfig  | 6 +++++-
+ arch/arm64/configs/lineageos_h918_oxavelar_defconfig  | 6 +++++-
+ arch/arm64/configs/lineageos_h990_oxavelar_defconfig  | 6 +++++-
+ arch/arm64/configs/lineageos_ls997_oxavelar_defconfig | 6 +++++-
+ arch/arm64/configs/lineageos_us996_oxavelar_defconfig | 6 +++++-
+ arch/arm64/configs/lineageos_vs995_oxavelar_defconfig | 6 +++++-
+ 6 files changed, 30 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/configs/lineageos_h910_oxavelar_defconfig b/arch/arm64/configs/lineageos_h910_oxavelar_defconfig
+index b00359aae63..e70acba7f83 100644
+--- a/arch/arm64/configs/lineageos_h910_oxavelar_defconfig
++++ b/arch/arm64/configs/lineageos_h910_oxavelar_defconfig
+@@ -712,7 +712,7 @@ CONFIG_LGE_PM_LGE_POWER_CLASS_CHARGER_SLEEP=y
+ CONFIG_LGE_PM_THERMAL_VTS=y
+ 
+ # LGE - Misc
+-CONFIG_LGE_DISABLE_SECOND_SCREEN=y
++# CONFIG_LGE_DISABLE_SECOND_SCREEN is not set
+ CONFIG_LGE_QPNP_HAPTIC_OV_RB=y
+ CONFIG_LGE_HALL_IC=y
+ CONFIG_LGE_HANDLE_PANIC=y
+@@ -798,3 +798,7 @@ CONFIG_SDFAT_VIRTUAL_XATTR=y
+ CONFIG_SDFAT_VIRTUAL_XATTR_SELINUX_LABEL="u:object_r:sdcard_external:s0"
+ # CONFIG_SDFAT_DEBUG is not set
+ # CONFIG_SDFAT_STATISTICS is not set
++CONFIG_INPUT_MOUSE=y
++CONFIG_INPUT_JOYDEV=y
++CONFIG_JOYSTICK_ANALOG=y
++CONFIG_HID_LOGITECH=y
+diff --git a/arch/arm64/configs/lineageos_h918_oxavelar_defconfig b/arch/arm64/configs/lineageos_h918_oxavelar_defconfig
+index bb7b90ed535..19007fafc5b 100644
+--- a/arch/arm64/configs/lineageos_h918_oxavelar_defconfig
++++ b/arch/arm64/configs/lineageos_h918_oxavelar_defconfig
+@@ -712,7 +712,7 @@ CONFIG_LGE_PM_LGE_POWER_CLASS_CHARGER_SLEEP=y
+ CONFIG_LGE_PM_THERMAL_VTS=y
+ 
+ # LGE - Misc
+-CONFIG_LGE_DISABLE_SECOND_SCREEN=y
++# CONFIG_LGE_DISABLE_SECOND_SCREEN is not set
+ CONFIG_LGE_QPNP_HAPTIC_OV_RB=y
+ CONFIG_LGE_HALL_IC=y
+ CONFIG_LGE_HANDLE_PANIC=y
+@@ -798,3 +798,7 @@ CONFIG_SDFAT_VIRTUAL_XATTR=y
+ CONFIG_SDFAT_VIRTUAL_XATTR_SELINUX_LABEL="u:object_r:sdcard_external:s0"
+ # CONFIG_SDFAT_DEBUG is not set
+ # CONFIG_SDFAT_STATISTICS is not set
++CONFIG_INPUT_MOUSE=y
++CONFIG_INPUT_JOYDEV=y
++CONFIG_JOYSTICK_ANALOG=y
++CONFIG_HID_LOGITECH=y
+diff --git a/arch/arm64/configs/lineageos_h990_oxavelar_defconfig b/arch/arm64/configs/lineageos_h990_oxavelar_defconfig
+index a003719abdd..c1090494e69 100644
+--- a/arch/arm64/configs/lineageos_h990_oxavelar_defconfig
++++ b/arch/arm64/configs/lineageos_h990_oxavelar_defconfig
+@@ -712,7 +712,7 @@ CONFIG_LGE_PM_LGE_POWER_CLASS_CHARGER_SLEEP=y
+ CONFIG_LGE_PM_THERMAL_VTS=y
+ 
+ # LGE - Misc
+-CONFIG_LGE_DISABLE_SECOND_SCREEN=y
++# CONFIG_LGE_DISABLE_SECOND_SCREEN is not set
+ CONFIG_LGE_QPNP_HAPTIC_OV_RB=y
+ CONFIG_LGE_HALL_IC=y
+ CONFIG_LGE_HANDLE_PANIC=y
+@@ -801,3 +801,7 @@ CONFIG_SDFAT_VIRTUAL_XATTR=y
+ CONFIG_SDFAT_VIRTUAL_XATTR_SELINUX_LABEL="u:object_r:sdcard_external:s0"
+ # CONFIG_SDFAT_DEBUG is not set
+ # CONFIG_SDFAT_STATISTICS is not set
++CONFIG_INPUT_MOUSE=y
++CONFIG_INPUT_JOYDEV=y
++CONFIG_JOYSTICK_ANALOG=y
++CONFIG_HID_LOGITECH=y
+diff --git a/arch/arm64/configs/lineageos_ls997_oxavelar_defconfig b/arch/arm64/configs/lineageos_ls997_oxavelar_defconfig
+index 2f5d8190fd1..d80d6d923ce 100644
+--- a/arch/arm64/configs/lineageos_ls997_oxavelar_defconfig
++++ b/arch/arm64/configs/lineageos_ls997_oxavelar_defconfig
+@@ -712,7 +712,7 @@ CONFIG_LGE_PM_LGE_POWER_CLASS_CHARGER_SLEEP=y
+ CONFIG_LGE_PM_THERMAL_VTS=y
+ 
+ # LGE - Misc
+-CONFIG_LGE_DISABLE_SECOND_SCREEN=y
++# CONFIG_LGE_DISABLE_SECOND_SCREEN is not set
+ CONFIG_LGE_QPNP_HAPTIC_OV_RB=y
+ CONFIG_LGE_HALL_IC=y
+ CONFIG_LGE_HANDLE_PANIC=y
+@@ -798,3 +798,7 @@ CONFIG_SDFAT_VIRTUAL_XATTR=y
+ CONFIG_SDFAT_VIRTUAL_XATTR_SELINUX_LABEL="u:object_r:sdcard_external:s0"
+ # CONFIG_SDFAT_DEBUG is not set
+ # CONFIG_SDFAT_STATISTICS is not set
++CONFIG_INPUT_MOUSE=y
++CONFIG_INPUT_JOYDEV=y
++CONFIG_JOYSTICK_ANALOG=y
++CONFIG_HID_LOGITECH=y
+diff --git a/arch/arm64/configs/lineageos_us996_oxavelar_defconfig b/arch/arm64/configs/lineageos_us996_oxavelar_defconfig
+index a31ecb9ad77..da3f92cfc15 100644
+--- a/arch/arm64/configs/lineageos_us996_oxavelar_defconfig
++++ b/arch/arm64/configs/lineageos_us996_oxavelar_defconfig
+@@ -712,7 +712,7 @@ CONFIG_LGE_PM_LGE_POWER_CLASS_CHARGER_SLEEP=y
+ CONFIG_LGE_PM_THERMAL_VTS=y
+ 
+ # LGE - Misc
+-CONFIG_LGE_DISABLE_SECOND_SCREEN=y
++# CONFIG_LGE_DISABLE_SECOND_SCREEN is not set
+ CONFIG_LGE_QPNP_HAPTIC_OV_RB=y
+ CONFIG_LGE_HALL_IC=y
+ CONFIG_LGE_HANDLE_PANIC=y
+@@ -798,3 +798,7 @@ CONFIG_SDFAT_VIRTUAL_XATTR=y
+ CONFIG_SDFAT_VIRTUAL_XATTR_SELINUX_LABEL="u:object_r:sdcard_external:s0"
+ # CONFIG_SDFAT_DEBUG is not set
+ # CONFIG_SDFAT_STATISTICS is not set
++CONFIG_INPUT_MOUSE=y
++CONFIG_INPUT_JOYDEV=y
++CONFIG_JOYSTICK_ANALOG=y
++CONFIG_HID_LOGITECH=y
+diff --git a/arch/arm64/configs/lineageos_vs995_oxavelar_defconfig b/arch/arm64/configs/lineageos_vs995_oxavelar_defconfig
+index 892f5c1a60e..646dbdf324f 100644
+--- a/arch/arm64/configs/lineageos_vs995_oxavelar_defconfig
++++ b/arch/arm64/configs/lineageos_vs995_oxavelar_defconfig
+@@ -712,7 +712,7 @@ CONFIG_LGE_PM_LGE_POWER_CLASS_CHARGER_SLEEP=y
+ CONFIG_LGE_PM_THERMAL_VTS=y
+ 
+ # LGE - Misc
+-CONFIG_LGE_DISABLE_SECOND_SCREEN=y
++# CONFIG_LGE_DISABLE_SECOND_SCREEN is not set
+ CONFIG_LGE_QPNP_HAPTIC_OV_RB=y
+ CONFIG_LGE_HALL_IC=y
+ CONFIG_LGE_HANDLE_PANIC=y
+@@ -798,3 +798,7 @@ CONFIG_SDFAT_VIRTUAL_XATTR=y
+ CONFIG_SDFAT_VIRTUAL_XATTR_SELINUX_LABEL="u:object_r:sdcard_external:s0"
+ # CONFIG_SDFAT_DEBUG is not set
+ # CONFIG_SDFAT_STATISTICS is not set
++CONFIG_INPUT_MOUSE=y
++CONFIG_INPUT_JOYDEV=y
++CONFIG_JOYSTICK_ANALOG=y
++CONFIG_HID_LOGITECH=y
+-- 
+2.17.1
+

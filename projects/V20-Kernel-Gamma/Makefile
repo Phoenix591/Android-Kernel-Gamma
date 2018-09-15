@@ -78,7 +78,6 @@ export 1GRAPHITE_FLAGS := \
 
 export KCFLAGS := \
         -pipe \
-<<<<<<< HEAD
         -finline-functions \
         -O3 \
 #	-fuse-ld=bfd \
@@ -110,15 +109,7 @@ export KCFLAGS := \
         $(GRAPHITE_FLAGS) \
 
 export KCFLAGS += -Wno-maybe-uninitialized
-<<<<<<< HEAD
-<<<<<<< HEAD
-export LDFLAGS += -O2 --hash-style=gnu --as-needed -flto
-=======
 export LDFLAGS += -O3 --hash-style=gnu --as-needed
->>>>>>> 80b2c86d... Keep lto disabled thats a can of worms that isnt happening
-=======
-export LDFLAGS += -Os --hash-style=gnu --as-needed
->>>>>>> 318d09fe... Update parameters etc in ramdisk to gamma v23
 
 export KCFLAGS += -Wno-misleading-indentation
 export KCFLAGS += -Wno-tautological-compare
@@ -133,16 +124,8 @@ export KCFLAGS += -fno-use-linker-plugin
 kernel:
 	mkdir -p "$(KBUILD_OUT_PATH)"
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" "$(KDEFCONFIG)"
-<<<<<<< HEAD
-	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y Image.gz-dtb
-=======
 #	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" menuconfig
-<<<<<<< HEAD
-	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y CONFIG_DEBUG_SECTION_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
->>>>>>> 80b2c86d... Keep lto disabled thats a can of worms that isnt happening
-=======
-	$(MAKE) -j9 -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
->>>>>>> 318d09fe... Update parameters etc in ramdisk to gamma v23
+	$(MAKE) -j$(nproc) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
 	cp -f "$(KBUILD_OUT_PATH)/arch/$(ARCH)/boot/Image.gz-dtb" "$(OUT_PATH)/Image.gz-dtb"
 	$(MAKE) -C anykernel DEVICE=$(DEVICE)
 
