@@ -40,15 +40,20 @@
 
 export ARCH := arm64
 export ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-#export CROSS_COMPILE := $(ROOT_DIR)/gcc/linaro-6.4/bin/aarch64-linux-gnu-
-#export CROSS_COMPILE := 'ccache /home/phoenix/linaro-6.4.1-05-2018/bin/aarch64-linux-gnu-'
+#variable used by kernel's own makefile to determine cross compiler prefix
 export CROSS_COMPILE := aarch64-linux-gnu-
-export PATH := $(ROOT_DIR)/ccache:/home/phoenix/linaro-6.4.1-05-2018/bin:$(PATH)
+# cross compiler directory, used to set the path below
+export XCOMPILER := /home/phoenix/linaro-6.4.1-05-2018/
+#How many jobs should be used when building, controls -j below
+export JOBS := 15
+#call ccache using the symlinks in /ccache, it finds the real compiler by path
+export PATH := $(ROOT_DIR)/ccache:$(XCOMPILER)/bin:$(PATH)
 export KBUILD_VERBOSE := 0
 
 ############################################################################
 ##################### LOCAL SETUP AND FILE STRUCTURES ######################
 ############################################################################
+#default device, build for others by using "DEVICE=h910 make"
 export DEVICE = h918
 KDEFCONFIG := lineageos_$(DEVICE)_oxavelar_defconfig
 KSRC_PATH = $(ROOT_DIR)/kernel/
@@ -122,10 +127,11 @@ export KCFLAGS += -fno-use-linker-plugin
 
 .PHONY: kernel
 kernel:
+	echo $(PATH)
 	mkdir -p "$(KBUILD_OUT_PATH)"
 	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" "$(KDEFCONFIG)"
 #	$(MAKE) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" menuconfig
-	$(MAKE) -j$(nproc) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
+	$(MAKE) -j$(JOBS) -C "$(KSRC_PATH)" O="$(KBUILD_OUT_PATH)" CONFIG_NO_ERROR_ON_MISMATCH=y KCFLAGS+="$(KCFLAGS)" Image.gz-dtb
 	cp -f "$(KBUILD_OUT_PATH)/arch/$(ARCH)/boot/Image.gz-dtb" "$(OUT_PATH)/Image.gz-dtb"
 	$(MAKE) -C anykernel DEVICE=$(DEVICE)
 
@@ -134,7 +140,7 @@ modules:
 	# General modules from the kernel
 	mkdir -p "$(MBUILD_OUT_PATH)"
 	$(MAKE) -C "$(KSRC_PATH)" O="$(MBUILD_OUT_PATH)" "$(KDEFCONFIG)"
-	$(MAKE) -C "$(KSRC_PATH)" O="$(MBUILD_OUT_PATH)" modules
+	$(MAKE) -j$(JOBS) -C "$(KSRC_PATH)" O="$(MBUILD_OUT_PATH)" modules
 	# Copy the created modules to the ramdisk path and strip debug symbols
 	find "$(MBUILD_OUT_PATH)" -iname *.ko -exec cp -f \{\} "$(OUT_PATH)/lib/modules/" \;
 	strip --strip-debug --strip-unneeded --remove-section=.comment --remove-section=.note "$(OUT_PATH)/lib/modules/*.*o"
